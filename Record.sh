@@ -11,9 +11,6 @@ mkdir -p "${DESTDIR}"
 # Original mic: hw:CARD=WEBCAM,DEV=0
 MICROPHONE="${3}"
 
-# Original format: S16_LE
-FORMAT="U8"
-
-arecord "--format=${FORMAT}" --rate=16000 --file-type=wav -d "${SECONDS}" -D "${MICROPHONE}" 2> /dev/null | /home/pi/encrypt.sh "${DESTDIR}"/`date -Iseconds`.wav.gpg 2> /dev/null
+arecord --format=S16_LE --rate=16000 --file-type=wav -d "${SECONDS}" -D "${MICROPHONE}" 2> /dev/null | /home/pi/encrypt.sh "${DESTDIR}"/`date -Iseconds`.wav.gpg 2> /dev/null
 sync
 

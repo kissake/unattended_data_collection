@@ -99,19 +99,25 @@ I installed the relevant software:
 #### usbmount notes
 
 You will probably (as of this writing) find that 
+
   `systemctl show --property=PrivateMounts systemd-udevd.service`
+
 shows the output:
+
   `PrivateMounts=yes`
 
 In my experience, this means the USB drive won't correctly mount to /media/usb0/ when connected.  Ideally, you could fix this with the command:
+
   `systemctl set-property systemd-udevd.service PrivateMounts=no`
 
 However, due to systemd, we can't have nice things (I may file a bug report, but I'm open to hearing why I'm wrong).  Instead, you'll need to edit the file with the command:
+
   `sudo systemctl edit systemd-udevd.service`
 
 And add the following two lines near the top of the file, between the two relevant comments: "### Anything between here and "... and "### Lines below this "...
 
-```[Service]
+```
+[Service]
 PrivateMounts=no
 ```
 
@@ -122,9 +128,11 @@ Putting them below the second comment is an exercise in futility.
 The active collection / function runs through cron.  The recordings are kicked off every 10 minutes on the 0'th minute, and the tool to copy data to the USB drive is run on reboot and continues until it crashes.
 
 Next, install the crontab as the 'pi' user:
+
   `crontab crontab`
 
 Make sure to check in on the usbmount notes below, and then reboot to activate the automatic exporting of data when you plug in the USB drive:
+
   `sudo reboot`
 
 
@@ -149,9 +157,11 @@ Example use case (functionality existing today):
 ## Contributors
 
 Just me so far, but I'm open to help.  I'm new to git / GitHub, so please be gentle.  
+
 I know there are a LOT of things to clean up, and I am not 100% on the cryptography part.  I know it works in a few ways:
  - Probably encrypted because zip absolutely refused to compress the WAV files I sent through this process, even when they were mostly silence.
  - Going through gpg encrypt and gpg decrypt has expected results (illegible after encrypt, useful after decrypt), but I don't actually know the algorithms, etc. in use, nor why I need to enter the password twice (yet).
+
 There are also lots of hardcoded things that need cleaning up.
 
 ## License

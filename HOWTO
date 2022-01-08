@@ -1,0 +1,20 @@
+How to use:
+
+Set up Raspberry Pi
+<Stuff goes here>
+
+Power on (plug into power)
+Attach microphone (currently camera too, camera not used)
+Confirm that the light is on.
+Wait until you think interesting audio has occurred some time in the past 24 hours, and interesting audio has stopped
+Unplug the microphone.
+Plug in the USB stick.
+Wait until the light goes out.  This will take a little while, as all of the MP3 files for the past 24 hours need to be put into a zip file on the USB drive.  Expected size for this is about 1/4GB (250MB), and it transfers about 1MB/s in early testing.  The light will only stay out for 20 seconds, but once done, it is done.
+Plug the microphone back in (won't start recording until the 10s of minutes (5:10, 5:20, 5:30, 5:40, etc.), but for intended use, this is low cost).
+
+To turn off:
+Unplug camera.
+Wait some small amount of time (small # seconds?)
+Unplug from power.
+
+

@@ -1,0 +1,59 @@
+Intent is to offer a tool for using GPG and other common tools to permit 
+collection and local storage of data such that the data is only recoverable
+to the holder of the private key corresponding to the public key used to
+encrypt the original data.
+
+Use case:
+ - Collect data in a public place with low-cost hardware, while protecting
+   the bulk of the data collected.
+ - Collect sensitive data with lower concern that the data will be accessible
+   to unintended recipients.
+
+Caveats:
+ - Until the encrypted file is closed and the corresponding key is erased from
+   memory, the data in the current file is at risk.  Choose file cycle times
+   with this in mind.
+ - If the private key is lost, the data is lost.
+ - Many protections intended for GPG keys that are held by persons are
+   bypassed as not relevant.  Examples: revocation, email addresses, etc.
+
+Future planned work:
+ - Add ability to encrypt to multiple private keys.
+ - Add ability to encrypt such that decryption only possible with a quorum of
+   private keys.
+
+Architecture:
+ - Tool to create private key and set up for data collection.
+   * setup.sh
+     + prompts for a passphrase.
+     + generates a .privkey and .pubkey pair.
+ - Tool to snarf data (stdin or filename on commandline) into an encrypted
+   store (series of files).  Intended for repeated, periodic use.
+   * encrypt.sh
+     + Requires access to .pubkey file only, and generates an encrypted output
+       that cannot be accessed without the .privkey and passphrase.
+ - Tool to decrypt store using private key.
+   * decrypt.sh
+     + Requires access to a .privkey file, and prompts for the passphrase used
+       in the setup stage.
+
+
+Options to retrieve data from the Pi:
+ - HTTP? (can even use non-SSL because the data is all encrypted).
+   * Offer a lighttpd conf file for this purpose.
+   * Run as a private user by disabling (sudo systemctl disable lighttpd.servce
+     and then stopping sudo sytemctl stop lighttpd.service before running it
+     as the pi user)
+ - Write to an external USB stick?
+   * Sound recording should already stop immediately and fail to start at next
+     interval if no mic.
+   * Need to auto-mount and copy out current batch of audio files to a USB
+     stick if plugged in, then unmount+sync.  How to signal when that is done?
+   * Auto mount can happen with usbmount package.  Needs additional config:
+     & If grep "PrivateMounts=yes" && echo [service]\nPrivateMounts=no |
+systemctl show --property=PrivateMounts
+systemctl set-property <unit> PrivateMounts=no
+   * Requires this to be set by editint due to bug: systemctl edit ...?
+   * requires 'zip' package
+   * Requires autoExport shell script.
+

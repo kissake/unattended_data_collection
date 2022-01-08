@@ -19,7 +19,7 @@ Example use case (functionality existing today):
  - Unplug the microphone.
  - Plug in a USB stick.
  - Remove USB stick when the light turns on, and take to the computer where you generated the key pair to decrypt.
-PrivateMounts=yes
+
 ## Features
 
 Features:
@@ -99,20 +99,21 @@ I installed the relevant software:
 #### usbmount notes
 
 You will probably (as of this writing) find that 
-  systemctl show --property=PrivateMounts systemd-udevd.service
+  `systemctl show --property=PrivateMounts systemd-udevd.service`
 shows the output:
-  PrivateMounts=yes
+  `PrivateMounts=yes`
 
 In my experience, this means the USB drive won't correctly mount to /media/usb0/ when connected.  Ideally, you could fix this with the command:
-  systemctl set-property systemd-udevd.service PrivateMounts=no
+  `systemctl set-property systemd-udevd.service PrivateMounts=no`
 
 However, due to systemd, we can't have nice things (I may file a bug report, but I'm open to hearing why I'm wrong).  Instead, you'll need to edit the file with the command:
-  sudo systemctl edit systemd-udevd.service
+  `sudo systemctl edit systemd-udevd.service`
 
 And add the following two lines near the top of the file, between the two relevant comments: "### Anything between here and "... and "### Lines below this "...
 
-[Service]
+```[Service]
 PrivateMounts=no
+```
 
 Putting them below the second comment is an exercise in futility.
 
@@ -121,10 +122,10 @@ Putting them below the second comment is an exercise in futility.
 The active collection / function runs through cron.  The recordings are kicked off every 10 minutes on the 0'th minute, and the tool to copy data to the USB drive is run on reboot and continues until it crashes.
 
 Next, install the crontab as the 'pi' user:
-  crontab crontab
+  `crontab crontab`
 
 Make sure to check in on the usbmount notes below, and then reboot to activate the automatic exporting of data when you plug in the USB drive:
-  sudo reboot
+  `sudo reboot`
 
 
 ## Usage
@@ -158,5 +159,4 @@ There are also lots of hardcoded things that need cleaning up.
 This is being released under GNU General Public License version 3.  License information to be updated in relevant files before long.
 
 Of course, only my contributions are so licensed.  I believe the files in this GitHub project are exclusively my own work with the exception of some crontab boilerplate.  
-
 I am making use of Debian as my base / baseline; this would have gone no-where without the great folks working on that project / in that community.

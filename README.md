@@ -57,14 +57,20 @@ In this form, you'll want:
 
 ## Installation or Getting Started
 
+### Get this data
 You can get this software here from GitHub.  Lots of tutorials on that part.
 
+### Install Raspberry Pi OS and make it accessible via ssh
 I did the Raspberry OS install without beneift of HDMI, USB keyboard, etc. by following directions here: https://thedatafrog.com/en/articles/raspberry-pi-zero-headless-install/
  - I found this article helpful: https://github.com/raspberrypi/firmware/issues/1184
  - I may create a tool to automate this part at some point; not there yet.
  - Do an update + upgrade so you're up-to-date OS-wise.
 
+### unattended_data_collection setup
+
 I created the public / private key pair using the setup.sh script.  It requires a password (a pair of passwords?) for the private key.
+
+### Install collection tools
 
 I copied data to the Raspberry Pi 'pi' user's home directory using scp:
  - autoExport.sh
@@ -77,6 +83,8 @@ I copied data to the Raspberry Pi 'pi' user's home directory using scp:
  - Record.sh
  - temp.pubkey
 
+### Install software dependencies
+
 I installed the relevant software:
  - Note that gpg and arecord (if you want to use that instead) are already installed in the default build.
  - ffmpeg
@@ -88,15 +96,7 @@ I installed the relevant software:
  - lighttpd
    * An alternative tool for pulling the data off.  Non-SSL, but this lack of encryption is mitigated by the fact that the data itself is already encrypted.
 
-Next, install the crontab as the 'pi' user:
-  crontab crontab
-
-Make sure to check in on the usbmount notes below, and then reboot to activate the automatic exporting of data when you plug in the USB drive:
-  sudo reboot
-
-
-
-### usbmount notes
+#### usbmount notes
 
 You will probably (as of this writing) find that 
   systemctl show --property=PrivateMounts systemd-udevd.service
@@ -113,8 +113,18 @@ And add the following two lines near the top of the file, between the two releva
 
 [Service]
 PrivateMounts=no
-  
+
 Putting them below the second comment is an exercise in futility.
+
+### Activate the data collection
+
+The active collection / function runs through cron.  The recordings are kicked off every 10 minutes on the 0'th minute, and the tool to copy data to the USB drive is run on reboot and continues until it crashes.
+
+Next, install the crontab as the 'pi' user:
+  crontab crontab
+
+Make sure to check in on the usbmount notes below, and then reboot to activate the automatic exporting of data when you plug in the USB drive:
+  sudo reboot
 
 
 ## Usage

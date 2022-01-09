@@ -68,7 +68,7 @@ I did the Raspberry OS install without beneift of HDMI, USB keyboard, etc. by fo
 
 ### unattended_data_collection setup
 
-I created the public / private key pair using the setup.sh script.  It requires a password (a pair of passwords?) for the private key.
+I created the public / private key pair using the setup.sh script.  You should name them 'audio', or update the crontab file with the new name.  It requires a password (a pair of passwords?) for the private key.
 
 ### Install collection tools
 

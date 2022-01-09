@@ -3,8 +3,13 @@
 GPGTEMPDIR=`mktemp -d`
 KEYID="temp"
 
-### if [ ${#} -gt 0 ]
-### then
+if [ ${#} -eq 0 ] || [ ${#} -gt 1 ]
+then
+	echo "Usage: ${0} FILENAME"
+	echo "Take data on stdin and encrypt it using ${KEYID}.pubkey. to the filename provided on the commandline."
+	echo
+	exit 1 ### Error: incorrect number of arguments.
+fi
 	### KEYID="${1}"
 ### else
 	### KEYID="temp"

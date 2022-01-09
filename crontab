@@ -1,4 +1,4 @@
-*/10 * * * * /home/pi/RecordMp3.sh 10 /home/pi/WAVs "hw:1"
+*/10 * * * * /home/pi/RecordMp3.sh audio 10 /home/pi/WAVs "hw:1"
 5 * * * * /home/pi/CleanupOldWAVs.sh
 @reboot /home/pi/autoExport.sh
 

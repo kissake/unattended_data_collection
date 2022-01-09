@@ -1,13 +1,13 @@
 #!/bin/bash
 
-GPGTEMPDIR=`mktemp -d`
-
-if [ ${#} -gt 0 ]
+if [ ${#} -ne 1 ]
 then
-	KEYID="${1}"
-else
-	KEYID="temp"
+	echo "Wrong # arguments.  FIXME"
+	exit 1
 fi
+
+GPGTEMPDIR=`mktemp -d`
+KEYID="${1}"
 
 ### Prompts for password
 ### This is to encrypt the private key in the temporary directory.

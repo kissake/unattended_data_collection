@@ -2,7 +2,7 @@
 
 # Needed for running subprocesses
 import os
-import sys
+import subprocess
 import argparse
 
 # File containing the ratchet state.
@@ -30,7 +30,20 @@ def getRelTime():
 
 def getNTPSyncTime():
     # Get current time if NTPSynchronized, or return false otherwise.
-    None
+    timeDateOutput = subprocess.check_output(['/usr/bin/timedatectl','show'])
+    timeDateValues=timeDateOutput.split(b'\n')
+    # print(timeDateValues)
+    if b'NTPSynchronized=yes' in timeDateValues:
+        for value in timeDateValues:
+            if value.startswith(b'TimeUSec'):
+                (trash, dateTime) = value.decode('utf-8').split('=')
+                (trash, date, time, tz) = dateTime.split(" ")
+                time.replace(":"," ")
+                return "_".join([date, time, tz])
+    
+    # Time not synchronized or unable to interpret time.
+    return False
+
 
 def getRatchet(ratchetFileName=None):
     # Get the current value of the ratchet/counter, default to zero (0)
@@ -53,8 +66,7 @@ def getRatchet(ratchetFileName=None):
         print("The ratchet file may have been corrupted.  You can overwrite the contents of %s using the --ratchet argument to this command" % (ratchetFileName))
         raise
         
-            
-
+    
     
 def ratchet(ratchetFileName=None):
     # Increment the locally stored counter (typically boot counter)

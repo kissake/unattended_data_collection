@@ -8,6 +8,11 @@ import argparse
 # File containing the ratchet state.
 ratchetFileDefault="~/.clockratchet"
 
+# Uptime file.
+uptimeFileName = "/proc/uptime"
+
+
+
 def arguments():
 
     parser = argparse.ArgumentParser(
@@ -26,7 +31,29 @@ def arguments():
 
 def getRelTime():
     # Get years, weeks, days, hours, minutes, seconds since boot.
-    None
+
+    # Extract number of seconds since boot from /proc/uptime
+    uptimeFile = open(uptimeFileName,"r")
+    uptimeData = uptimeFile.read()
+    (secs, trash) = uptimeData.split(' ')
+
+    # Separate number of seconds of uptime into time units using the uptime format:
+    # Uptime format (reverse of below): seconds, minutes, hours, days, weeks, years.
+    uptimeParsing = [60, 60, 24, 7, 52]
+    curr = int(float(secs))
+    values = []
+    for increment in uptimeParsing:
+        values.append(curr % increment)
+        next = curr // increment
+        curr = next
+    values.append(curr)
+    values.reverse()
+
+    # Format value text into years, weeks, days, 
+    valueText="-".join(["%02d" % val for val in values])
+    
+    return valueText
+
 
 def getNTPSyncTime():
     # Get current time if NTPSynchronized, or return false otherwise.

@@ -12,7 +12,6 @@ ratchetFileDefault="~/.clockratchet"
 uptimeFileName = "/proc/uptime"
 
 
-
 def arguments():
 
     parser = argparse.ArgumentParser(
@@ -26,6 +25,11 @@ def arguments():
         dest='ratchetFile',
         default=ratchetFileDefault,
         help='Indicate the file to store the ratchet data in.  Default value is: %s' % (ratchetFileDefault))
+    parser.add_argument(
+        '--label',
+        dest='label',
+        default=None,
+        help='Add a label string to be included in the output to disambiguate if needed')
     return parser.parse_args()
 
 
@@ -110,10 +114,18 @@ if __name__ == "__main__":
         ratchet(args.ratchetFile)
     else:
         ratchetValue=getRatchet(args.ratchetFile)
+        if args.label is not None:
+            ratchetText="%s--%s" % (args.label, ratchetValue)
+        else:
+            ratchetText=ratchetValue
+            
         relTimeValue=getRelTime()
+
         timeSyncValue=getNTPSyncTime()
+        
         if timeSyncValue != False:
-            print("%s+%s--%s" % (ratchetValue, relTimeValue, timeSyncValue))
+            print("%s+%s--%s" % (ratchetText, relTimeValue, timeSyncValue))
         else:
             print("%s+%s" % (ratchetValue, relTimeValue))
+
         

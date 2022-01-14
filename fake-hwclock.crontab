@@ -1,0 +1,4 @@
+# Save the hardware clock time at least hourly to avoid repeating time, even
+# if the system is power cycled without the reboot process.
+*/59 * * * * /usr/sbin/fake-hwclock save
+

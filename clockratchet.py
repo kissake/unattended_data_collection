@@ -78,30 +78,26 @@ def getNTPSyncTime():
 
 def getRatchet(ratchetFileName=None):
     # Get the current value of the ratchet/counter, default to zero (0)
-    try:
+    if ratchetFileName is None:
+        ratchetFile = open(ratchetFileDefault,'r')
+    else:
+        ratchetFile = open(ratchetFileName,'r')
         
-        if ratchetFileName is None:
-            ratchetFile = open(ratchetFileDefault,'r')
-        else:
-            ratchetFile = open(ratchetFileName,'r')
-
-        # retrieve and return current ratchet value
-        currentRatchet = int(ratchetFile.read())
-        return currentRatchet
+    # retrieve and return current ratchet value
+    currentRatchet = int(ratchetFile.read())
+    return currentRatchet
     
-    except FileNotFoundError:
-        print("The ratchet file may not have been created yet.  Please check to ensure %s has been created using the --ratchet argument to this command" % (ratchetFileName))
-        raise
-
-    except ValueError:
-        print("The ratchet file may have been corrupted.  You can overwrite the contents of %s using the --ratchet argument to this command" % (ratchetFileName))
-        raise
         
     
     
 def ratchet(ratchetFileName=None):
     # Increment the locally stored counter (typically boot counter)
-    oldRatchetValue = getRatchet(ratchetFileName)
+    try:
+        oldRatchetValue = getRatchet(ratchetFileName)
+
+    except FileNotFoundError:
+        oldRatchetValue=0
+        
     newRatchetValue = oldRatchetValue+1
     ratchetFile = open(ratchetFileName,'w')
     ratchetFile.write(str(newRatchetValue))
@@ -110,9 +106,26 @@ def ratchet(ratchetFileName=None):
 if __name__ == "__main__":
     args = arguments()
     if args.ratchet:
-        ratchet(args.ratchetFile)
+        try:
+            
+            ratchet(args.ratchetFile)
+
+        except ValueError:
+            print("The ratchet file may have been corrupted.  Please review the file and recover or remove it.")
+            exit(1)
+
     else:
-        ratchetValue=getRatchet(args.ratchetFile)
+        try:
+            ratchetValue=getRatchet(args.ratchetFile)
+
+        except FileNotFoundError:
+            print("The ratchet file may not have been created yet.  Please ensure the file has been created using the --ratchet argument to this command")
+            exit(1)
+
+        except ValueError:
+            print("The ratchet file may have been corrupted.  Please review the file and recover or remove it.")
+            exit(1)
+            
         if args.label is not None:
             ratchetText="%s--%s" % (args.label, ratchetValue)
         else:

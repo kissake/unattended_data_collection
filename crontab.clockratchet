@@ -1,0 +1,2 @@
+@reboot /home/pi/clockratchet.py --ratchet --file /home/pi/.clockratchet
+

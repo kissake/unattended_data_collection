@@ -27,6 +27,7 @@ Features:
  - Data stored encrypted using the public key stored on the device.  An attacker that obtains the device does not have access to recordings that occurred before they gained access.
  - Automatically copies data to the USB stick when plugged in.
  - Automatically starts recording again after (not when) microphone plugged in again.
+ - Fully functional without network connectivity, with caveats (below: Caveats section)
 
 ## Motivation
 
@@ -147,6 +148,22 @@ Example use case (functionality existing today):
  - Unplug mic, plug in USB stick, and wait for the light to come on.
  - Unplug USB stick and plug in the mic again, waiting for the light to go out.
  - Repeat!
+
+## Caveats
+
+In the situation where there is no wireless access, the clock on the system is not going to be updated using
+NTP.  Instead it will only update using the normal builtin clock, along with the fake-hwtime feature (on the
+Raspberry Pi), which uses state recorded on disk to try to enforce monotonically increasing time.
+
+Because of this platform's lack of many features we often take for granted, it is possible, if not likely,
+that 1) the system will spend significant amounts of time without power, and 2) that the system will not
+maintain an external system clock (e.g. using a CMOS battery or similar), and 3) that the system will likely
+be shut down uncleanly (preventing the update of fake-hwclock).
+
+While the system will work to mitigate this in part by reporting the number of boots detected, along with the
+time relative to the most recent boot, in this situation it would be wise to take some step to record the 
+current time at some point after recording has begun.  One way to do this would be by speaking the current 
+time within range of the microphone.
     
 ## Reference
 

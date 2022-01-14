@@ -109,7 +109,6 @@ def ratchet(ratchetFileName=None):
 
 if __name__ == "__main__":
     args = arguments()
-    print(args)
     if args.ratchet:
         ratchet(args.ratchetFile)
     else:

@@ -38,7 +38,9 @@ To do that, I need to record data (audio) in a private context (e.g. a bedroom) 
 
 I don't want my pillow-talk to fall into someone else's hands without my consent.
 
-A future enhancement is to permit encryption with a sharded key such that all N persons who might have a privacy interest in the audio must consent.
+A future enhancement is to permit encryption such that all N persons who might have a privacy interest in the audio must consent.
+ - Perhaps sharding?
+ - But since it is 'all', simply sequentially encrypting with all, wrapping with one after the other.
 
 This raises an interesting concept w/r/t privacy, FWIW.  If we wanted to do this at huge scale, how might we do it?  
  - Bluetooth broadcast of a public key using badges / IDs / phones?  Combined with
@@ -80,8 +82,7 @@ I copied data to the Raspberry Pi 'pi' user's home directory using scp:
  - encrypt.sh
  - lighttpd.conf
  - RecordMp3.sh
- - Record.sh
- - temp.pubkey
+ - audio.pubkey
 
 ### Install software dependencies
 
